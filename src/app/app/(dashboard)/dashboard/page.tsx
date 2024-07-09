@@ -1,7 +1,7 @@
-import BrandListSection from "@/components/AppDashboard/BrandListSection";
-import ContentListSection from "@/components/AppDashboard/ContentListSection";
-import CreateBrandDialog from "@/components/AppDashboard/CreateBrandDialog";
-import CreateBrandSection from "@/components/AppDashboard/CreateBrandSection";
+import BrandListSection from "@/components/AppDashboard/Brand/BrandListSection";
+import ContentListSection from "@/components/AppDashboard/Content/ContentListSection";
+import CreateBrandDialog from "@/components/AppDashboard/Brand/CreateBrandDialog";
+import CreateBrandSection from "@/components/AppDashboard/Brand/CreateBrandSection";
 import { Separator } from "@/components/ui/separator";
 import {
   getAllBrandsByCreatorId,
@@ -10,6 +10,8 @@ import {
 } from "@/db/queries";
 import { cookies } from "next/headers";
 import React from "react";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 async function page() {
   const userId = cookies().get("userId")?.value;
@@ -17,16 +19,16 @@ async function page() {
   // get all brands registered under creator
   const brands = await getAllBrandsByCreatorId(creator?.id!);
   // const brands = [
-  //   {
-  //     id: 4,
-  //     name: "mybrand",
-  //     subdomain: "mybrand",
-  //     logoUrl: null,
-  //     bannerUrl: null,
-  //     creatorId: 1,
-  //   },
+  //   // {
+  //   //   id: 4,
+  //   //   name: "mybrand",
+  //   //   subdomain: "mybrand",
+  //   //   logoUrl: null,
+  //   //   bannerUrl: null,
+  //   //   creatorId: 1,
+  //   // },
   // ] as getAllBrandsByCreatorIdResponseSchema;
-  // console.log(brands);
+  console.log(brands);
 
   return (
     <div className="flex flex-col w-full p-4 gap-2 min-h-screen">
@@ -38,7 +40,7 @@ async function page() {
         ) : (
           <div className="flex flex-col gap-2 w-full">
             <BrandListSection brands={brands} />
-            <ContentListSection />
+            {/* <ContentListSection /> */}
           </div>
         )}
       </div>

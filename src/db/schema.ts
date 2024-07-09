@@ -45,6 +45,8 @@ export const insertBrandSchema = createInsertSchema(brandsTable);
 export const insertBrandFormSchema = insertBrandSchema.pick({
   name: true,
   subdomain: true,
+  logoUrl: true,
+  bannerUrl: true,
 });
 export type InsertBrand = typeof brandsTable.$inferInsert;
 export type SelectBrand = typeof brandsTable.$inferSelect;

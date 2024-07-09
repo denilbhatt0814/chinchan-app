@@ -19,7 +19,7 @@ function HeroSection({ brand }: { brand: SelectBrand }) {
             width={64}
             height={64}
             alt="Logo"
-            className="rounded-full bg-white p-2"
+            className="rounded-full bg-white p-1"
           />
           <h1 className="text-4xl font-bold text-white">{brand.name}</h1>
         </div>
