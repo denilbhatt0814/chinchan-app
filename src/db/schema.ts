@@ -1,5 +1,5 @@
 import { integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
-import { createInsertSchema } from "drizzle-zod";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 
 // ---------- USERS TABLE ----------
 
@@ -74,7 +74,19 @@ export const insertVideoFormSchema = insertVideoSchema.pick({
   thumbnailUrl: true,
 });
 
+export const selectVideoSchema = createSelectSchema(videosTable);
+export const updateVideoSchema = selectVideoSchema.pick({
+  id: true,
+  title: true,
+  description: true,
+  brandId: true,
+  mediaUrl: true,
+  thumbnailUrl: true,
+});
+export const updateVideoFormSchema = updateVideoSchema;
+
 export type InsertVideo = typeof videosTable.$inferInsert;
 export type SelectVideo = typeof videosTable.$inferSelect;
+export type UpdateVideo = Omit<SelectVideo, "createdAt">;
 
 // --------------------

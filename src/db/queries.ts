@@ -7,6 +7,7 @@ import {
   SelectBrand,
   SelectCreator,
   SelectVideo,
+  UpdateVideo,
   brandsTable,
   creatorsTable,
   videosTable,
@@ -59,6 +60,10 @@ export async function getAllBrandsByCreatorId(
 
 export async function createVideo(data: InsertVideo) {
   await db.insert(videosTable).values(data);
+}
+
+export async function updateVideo(data: UpdateVideo) {
+  await db.update(videosTable).set(data).where(eq(videosTable.id, data.id));
 }
 
 export async function deleteVideo(id: SelectVideo["id"]) {

@@ -38,7 +38,10 @@ function ContentCard({
           <CardTitle className="text-lg font-semibold hover:underline">
             {content.title}
           </CardTitle>
-          <ContentCardDropDown contentId={content.id} />
+          <ContentCardDropDown
+            contentId={content.id}
+            brandId={content.brandId}
+          />
         </div>
         <CardDescription>{content.description}</CardDescription>
         <div className="text-sm text-muted-foreground">

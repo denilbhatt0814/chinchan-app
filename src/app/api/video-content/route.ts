@@ -18,7 +18,7 @@ export async function POST(request: Request) {
       { status: 201 }
     );
   } catch (error) {
-    console.log("Error in create video contetn route", error);
+    console.log("Error in create video content route", error);
     return Response.json(
       { success: false, message: "Error creating video content" },
       { status: 500 }

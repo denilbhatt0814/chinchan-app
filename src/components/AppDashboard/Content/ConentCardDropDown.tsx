@@ -12,11 +12,19 @@ import axios from "axios";
 import { EllipsisIcon, PencilIcon, TrashIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-function ContentCardDropDown({ contentId }: { contentId: SelectVideo["id"] }) {
+function ContentCardDropDown({
+  contentId,
+  brandId,
+}: {
+  contentId: SelectVideo["id"];
+  brandId: SelectVideo["brandId"];
+}) {
   const { toast } = useToast();
   const router = useRouter();
 
-  function handleEdit() {}
+  function handleEdit() {
+    router.push(`/dashboard/${brandId}/content-edit/${contentId}`);
+  }
 
   async function handleDelete() {
     try {
