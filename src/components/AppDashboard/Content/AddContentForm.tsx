@@ -17,7 +17,7 @@ import { z } from "zod";
 import { insertVideoFormSchema } from "@/db/schema";
 import { useToast } from "@/components/ui/use-toast";
 import axios from "axios";
-import { LoaderIcon } from "lucide-react";
+import { LoaderIcon, PencilIcon, UploadIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import {
@@ -25,12 +25,16 @@ import {
   CloudinaryUploadWidgetInfo,
   CloudinaryUploadWidgetResults,
 } from "next-cloudinary";
+import Player from "next-video/player";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 function AddContentForm({ brandId }: { brandId: number }) {
   const router = useRouter();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [uploadVideoResource, setUploadVideoResource] =
+    useState<CloudinaryUploadWidgetInfo | null>(null);
+  const [uploadThumbnailResource, setUploadThumbnailResource] =
     useState<CloudinaryUploadWidgetInfo | null>(null);
 
   const form = useForm<z.infer<typeof insertVideoFormSchema>>({
@@ -72,6 +76,27 @@ function AddContentForm({ brandId }: { brandId: number }) {
     }
   }
 
+  const handleVideoUpload = (result: CloudinaryUploadWidgetResults) => {
+    const info = result.info as CloudinaryUploadWidgetInfo;
+    setUploadVideoResource(info);
+    form.setValue("mediaUrl", info.secure_url);
+
+    if (!form.getValues().thumbnailUrl) {
+      form.setValue("thumbnailUrl", info.thumbnail_url);
+    }
+
+    console.log(info);
+    console.log(form.getValues());
+  };
+
+  const handleThumbnailUpload = (result: CloudinaryUploadWidgetResults) => {
+    const info = result.info as CloudinaryUploadWidgetInfo;
+    setUploadThumbnailResource(info);
+    form.setValue("thumbnailUrl", info.secure_url);
+    console.log(info);
+    console.log(form.getValues());
+  };
+
   return (
     <Form {...form}>
       <div className="flex flex-col gap-1">
@@ -81,77 +106,160 @@ function AddContentForm({ brandId }: { brandId: number }) {
         </p>
       </div>
 
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <FormField
-          control={form.control}
-          name="title"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Title</FormLabel>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <div className="grid md:grid-cols-2 gap-4 items-start">
+          <div className="flex flex-col items-start gap-2">
+            {/* CONTENT UPLOAD */}
+            <FormItem className="w-full">
+              <FormLabel className="flex justify-between py-1 items-center">
+                <div>Content Upload</div>
+                {uploadVideoResource && (
+                  <CldUploadButton
+                    uploadPreset="chinchanuploads"
+                    onUpload={handleVideoUpload}
+                    children={
+                      <div className="flex items-center p-0 gap-1 rounded-md hover:bg-slate-50 dark:hover:bg-slate-800 hover:shadow-sm">
+                        <p className="text-sm">
+                          {uploadVideoResource.original_filename +
+                            "." +
+                            uploadVideoResource.format}
+                        </p>
+                        <UploadIcon className="w-4 h-4" />
+                      </div>
+                    }
+                  />
+                )}
+              </FormLabel>
               <FormControl>
-                <Input placeholder="ex: 'Kaashi Vlog (Part 2)' " {...field} />
+                <>
+                  {/* UPLOAD BOX */}
+                  {!uploadVideoResource && (
+                    <div className="flex flex-col h-[30vh] light:bg-slate-100 rounded-md w-full gap-2 items-center justify-center border border-dotted border-blue-400">
+                      <p className="text-sm font-semibold">
+                        🎞️ Select a Media File
+                      </p>
+                      <Button type="button" variant="outline" asChild>
+                        <CldUploadButton
+                          uploadPreset="chinchanuploads"
+                          onUpload={handleVideoUpload}
+                        />
+                      </Button>
+                    </div>
+                  )}
+                  {/* VIDEO BOX */}
+                  {uploadVideoResource && (
+                    <div>
+                      <AspectRatio ratio={16 / 9}>
+                        <Player
+                          src={form.getValues().mediaUrl}
+                          className="h-full w-full object-cover"
+                        ></Player>
+                      </AspectRatio>
+                    </div>
+                  )}
+                </>
               </FormControl>
               <FormMessage />
             </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Description</FormLabel>
+            {/* THUMBNAIL UPLOAD */}
+            <FormItem className="w-full">
+              <FormLabel className="flex justify-between py-1 items-center">
+                <div>Thumbnail Upload</div>
+                {(uploadThumbnailResource || form.getValues().thumbnailUrl) && (
+                  <CldUploadButton
+                    uploadPreset="chinchanuploads"
+                    onUpload={handleThumbnailUpload}
+                    children={
+                      <div className="flex items-center p-0 gap-1 rounded-md hover:bg-slate-50 dark:hover:bg-slate-800 hover:shadow-sm">
+                        <p className="text-sm">Change</p>
+                        <UploadIcon className="w-4 h-4" />
+                      </div>
+                    }
+                  />
+                )}
+              </FormLabel>
               <FormControl>
-                <Input placeholder="Add a short description" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <div className="flex flex-col items-start gap-2">
-          <FormLabel>Content Upload</FormLabel>
-          <FormControl>
-            <div className="flex gap-2 items-center">
-              <Button type="button" variant="outline" asChild>
-                <CldUploadButton
-                  uploadPreset="chinchanuploads"
-                  onUpload={(result: CloudinaryUploadWidgetResults) => {
-                    const info = result.info as CloudinaryUploadWidgetInfo;
-                    setUploadVideoResource(info);
-                    form.setValue("mediaUrl", info.secure_url);
-                    form.setValue("thumbnailUrl", info.thumbnail_url);
-                    console.log(info);
-                    console.log(form.getValues());
-                  }}
-                />
-              </Button>
-              {uploadVideoResource && (
-                <div className="flex flex-col ">
-                  <p className="text-sm font-light">File Name:</p>
-                  <p className="text-sm font-light">
-                    {uploadVideoResource.original_filename +
-                      "." +
-                      uploadVideoResource.format}
-                  </p>
+                <div className="grid grid-cols-4">
+                  {/* UPLOAD BOX */}
+                  {!(
+                    uploadThumbnailResource || form.getValues().thumbnailUrl
+                  ) && (
+                    <div className="flex flex-col col-span-2 h-[20vh] light-slate-100 rounded-md w-full gap-2 items-center justify-center border border-dotted border-blue-400">
+                      <p className="text-sm font-semibold">
+                        ✨ Select a Thumbnail
+                      </p>
+                      <Button type="button" variant="outline" asChild>
+                        <CldUploadButton
+                          uploadPreset="chinchanuploads"
+                          onUpload={handleThumbnailUpload}
+                        />
+                      </Button>
+                    </div>
+                  )}
+                  {/* THUMBNAIL PREVIEW BOX */}
+                  {(uploadThumbnailResource ||
+                    form.getValues().thumbnailUrl) && (
+                    <div className="col-span-2 h-[20vh]">
+                      <AspectRatio ratio={16 / 9}>
+                        <img
+                          src={form.getValues().thumbnailUrl}
+                          className="h-full w-full object-cover"
+                        />
+                      </AspectRatio>
+                    </div>
+                  )}
                 </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          </div>
+          <div className="space-y-4">
+            {/* MAIN FORM */}
+            <FormField
+              control={form.control}
+              name="title"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Title</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="ex: 'Kaashi Vlog (Part 2)' "
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
               )}
-            </div>
-          </FormControl>
-          <FormMessage />
-        </div>
-        <div className="py-2">
-          <Button
-            type="submit"
-            onClick={() => {
-              console.log(form.getValues());
-            }}
-            disabled={isLoading}
-          >
-            <LoaderIcon
-              className={cn("animate-spin", isLoading ? "" : "hidden")}
             />
-            Add
-          </Button>
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Add a short description" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className="py-2">
+              <Button
+                type="submit"
+                onClick={() => {
+                  console.log(form.getValues());
+                }}
+                disabled={isLoading}
+              >
+                <LoaderIcon
+                  className={cn("animate-spin", isLoading ? "" : "hidden")}
+                />
+                Add
+              </Button>
+            </div>
+          </div>
         </div>
       </form>
     </Form>
