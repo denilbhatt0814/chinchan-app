@@ -5,9 +5,6 @@ export async function POST(request: Request) {
   try {
     const data = await request.json();
 
-    // add brand id to data
-    data.brandId = 4;
-
     const result = insertVideoSchema.safeParse(data);
 
     if (!result.success) {

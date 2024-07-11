@@ -61,6 +61,10 @@ export async function createVideo(data: InsertVideo) {
   await db.insert(videosTable).values(data);
 }
 
+export async function deleteVideo(id: SelectVideo["id"]) {
+  await db.delete(videosTable).where(eq(videosTable.id, id));
+}
+
 export async function getVideoById(
   id: SelectVideo["id"]
 ): Promise<SelectVideo | null> {
@@ -87,6 +91,17 @@ export async function getAllVideoByCreatorId(
           .where(eq(brandsTable.creatorId, id))
       )
     )
+    .limit(10);
+}
+
+export type getAllVideosByBrandIdResponseSchema = Array<SelectVideo>;
+export async function getAllVideoByBrandId(
+  id: SelectVideo["brandId"]
+): Promise<getAllVideosByCreatorIdResponseSchema> {
+  return db
+    .select()
+    .from(videosTable)
+    .where(eq(videosTable.brandId, id))
     .limit(10);
 }
 

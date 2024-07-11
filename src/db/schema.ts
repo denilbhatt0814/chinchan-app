@@ -69,6 +69,7 @@ export const insertVideoSchema = createInsertSchema(videosTable);
 export const insertVideoFormSchema = insertVideoSchema.pick({
   title: true,
   description: true,
+  brandId: true,
   mediaUrl: true,
   thumbnailUrl: true,
 });

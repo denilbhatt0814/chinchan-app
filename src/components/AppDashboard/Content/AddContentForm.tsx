@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -11,7 +11,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -27,7 +26,7 @@ import {
   CloudinaryUploadWidgetResults,
 } from "next-cloudinary";
 
-function AddContentForm() {
+function AddContentForm({ brandId }: { brandId: number }) {
   const router = useRouter();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
@@ -39,6 +38,7 @@ function AddContentForm() {
     defaultValues: {
       title: "",
       description: "",
+      brandId: Number(brandId),
       mediaUrl: "",
       thumbnailUrl: "",
     },
@@ -46,7 +46,7 @@ function AddContentForm() {
 
   async function onSubmit(values: z.infer<typeof insertVideoFormSchema>) {
     setIsLoading(true);
-    console.log(values);
+    console.log(values, typeof brandId);
     try {
       const response = await axios.post(
         "/api/video-content",
@@ -60,7 +60,8 @@ function AddContentForm() {
       console.log(response.data);
       toast({ title: "🤘 New content added successfully..!!" });
       setIsLoading(false);
-      router.push("/dashboard");
+
+      router.replace(`/dashboard/${brandId}`);
     } catch (error) {
       console.log(error);
       setIsLoading(false);
@@ -139,7 +140,13 @@ function AddContentForm() {
           <FormMessage />
         </div>
         <div className="py-2">
-          <Button type="submit" disabled={isLoading}>
+          <Button
+            type="submit"
+            onClick={() => {
+              console.log(form.getValues());
+            }}
+            disabled={isLoading}
+          >
             <LoaderIcon
               className={cn("animate-spin", isLoading ? "" : "hidden")}
             />
