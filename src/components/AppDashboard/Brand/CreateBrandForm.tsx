@@ -17,7 +17,7 @@ import { z } from "zod";
 import { insertBrandFormSchema } from "@/db/schema";
 import { useToast } from "@/components/ui/use-toast";
 import axios from "axios";
-import { LoaderIcon } from "lucide-react";
+import { LoaderIcon, UploadIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import {
@@ -25,6 +25,7 @@ import {
   CloudinaryUploadWidgetInfo,
   CloudinaryUploadWidgetResults,
 } from "next-cloudinary";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 function CreateBrandForm() {
   const router = useRouter();
@@ -71,6 +72,21 @@ function CreateBrandForm() {
     }
   }
 
+  const handleLogoUpload = (result: CloudinaryUploadWidgetResults) => {
+    const info = result.info as CloudinaryUploadWidgetInfo;
+    setLogoResource(info);
+    form.setValue("logoUrl", info.secure_url);
+    console.log(info);
+    console.log(form.getValues());
+  };
+  const handleBannerUpload = (result: CloudinaryUploadWidgetResults) => {
+    const info = result.info as CloudinaryUploadWidgetInfo;
+    setBannerResource(info);
+    form.setValue("bannerUrl", info.secure_url);
+    console.log(info);
+    console.log(form.getValues());
+  };
+
   return (
     <Form {...form}>
       <div className="flex flex-col gap-1">
@@ -114,7 +130,99 @@ function CreateBrandForm() {
             </FormItem>
           )}
         />
-        <div className="flex flex-col items-start gap-2">
+        <FormItem className="w-full">
+          <FormLabel className="flex justify-between py-1 items-center">
+            <div>Banner</div>
+            {(bannerResource || form.getValues().bannerUrl) && (
+              <CldUploadButton
+                uploadPreset="chinchan_brand_assets"
+                onUpload={handleBannerUpload}
+                children={
+                  <div className="flex items-center p-0 gap-1 rounded-md hover:bg-slate-50 dark:hover:bg-slate-800 hover:shadow-sm">
+                    <p className="text-sm">Change</p>
+                    <UploadIcon className="w-4 h-4" />
+                  </div>
+                }
+              />
+            )}
+          </FormLabel>
+          <FormControl>
+            <>
+              {/* UPLOAD BOX */}
+              {!(bannerResource || form.getValues().bannerUrl) && (
+                <div className="flex flex-col h-[30vh] light:bg-slate-100 rounded-md w-full gap-2 items-center justify-center border border-dotted border-blue-400">
+                  <p className="text-sm font-semibold">🎞️ Select a Banner</p>
+                  <Button type="button" variant="outline" asChild>
+                    <CldUploadButton
+                      uploadPreset="chinchan_brand_assets"
+                      onUpload={handleBannerUpload}
+                    />
+                  </Button>
+                </div>
+              )}
+              {/* BANNER BOX */}
+              {(bannerResource || form.getValues().bannerUrl) && (
+                <div className="">
+                  <AspectRatio ratio={3 / 1}>
+                    <img
+                      src={form.getValues().bannerUrl!}
+                      className="h-full w-full object-cover"
+                    />
+                  </AspectRatio>
+                </div>
+              )}
+            </>
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+
+        <FormItem className="w-full">
+          <FormLabel className="flex justify-between py-1 items-center">
+            <div>Logo</div>
+            {(logoResource || form.getValues().logoUrl) && (
+              <CldUploadButton
+                uploadPreset="chinchanuploads"
+                onUpload={handleLogoUpload}
+                children={
+                  <div className="flex items-center p-0 gap-1 rounded-md hover:bg-slate-50 dark:hover:bg-slate-800 hover:shadow-sm">
+                    <p className="text-sm">Change</p>
+                    <UploadIcon className="w-4 h-4" />
+                  </div>
+                }
+              />
+            )}
+          </FormLabel>
+          <FormControl>
+            <div className="grid grid-cols-2">
+              {/* UPLOAD BOX */}
+              {!(logoResource || form.getValues().logoUrl) && (
+                <div className="flex flex-col col-span-1 h-[20vh] light-slate-100 rounded-md w-full gap-2 items-center justify-center border border-dotted border-blue-400">
+                  <p className="text-sm font-semibold">✨ Select a Logo</p>
+                  <Button type="button" variant="outline" asChild>
+                    <CldUploadButton
+                      uploadPreset="chinchan_brand_assets"
+                      onUpload={handleLogoUpload}
+                    />
+                  </Button>
+                </div>
+              )}
+              {/* LOGO PREVIEW BOX */}
+              {(logoResource || form.getValues().logoUrl) && (
+                <div className="col-span-1 w-[15vh] h-[15vh]">
+                  <AspectRatio ratio={1 / 1}>
+                    <img
+                      src={form.getValues().logoUrl!}
+                      className="object-cover"
+                    />
+                  </AspectRatio>
+                </div>
+              )}
+            </div>
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+
+        {/* <div className="flex flex-col items-start gap-2">
           <FormLabel>Upload Logo</FormLabel>
           <FormControl>
             <div className="flex gap-2 items-center">
@@ -171,7 +279,7 @@ function CreateBrandForm() {
             </div>
           </FormControl>
           <FormMessage />
-        </div>
+        </div> */}
 
         <div className="py-2">
           <Button type="submit" disabled={isLoading}>

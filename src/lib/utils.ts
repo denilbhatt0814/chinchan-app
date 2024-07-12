@@ -34,3 +34,10 @@ export function getTimeElapsedString(date: Date): string {
     return `${yearsAgo} year${yearsAgo > 1 ? "s" : ""} ago`;
   }
 }
+
+export function getPublicIdFromUrl(url: string): string | null {
+  const regex = /\/v\d+\/([^/.]+\/[^/.]+)(?:\.[^/.]+)?$/;
+
+  const match = url.match(regex);
+  return match ? match[1] : null;
+}

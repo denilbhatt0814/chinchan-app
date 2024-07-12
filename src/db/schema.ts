@@ -33,8 +33,8 @@ export const brandsTable = pgTable("brands_table", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
   subdomain: text("subdomain").notNull(),
-  logoUrl: text("logo_url"),
-  bannerUrl: text("banner_url"),
+  logoUrl: text("logo_url").notNull(),
+  bannerUrl: text("banner_url").notNull(),
   creatorId: integer("creator_id")
     .notNull()
     .references(() => creatorsTable.id, { onDelete: "cascade" }),
@@ -48,8 +48,20 @@ export const insertBrandFormSchema = insertBrandSchema.pick({
   logoUrl: true,
   bannerUrl: true,
 });
+
+export const selectBrandSchema = createSelectSchema(brandsTable);
+export const updateBrandSchema = selectBrandSchema.pick({
+  id: true,
+  name: true,
+  subdomain: true,
+  logoUrl: true,
+  bannerUrl: true,
+});
+export const updateBrandFormSchema = updateBrandSchema;
+
 export type InsertBrand = typeof brandsTable.$inferInsert;
 export type SelectBrand = typeof brandsTable.$inferSelect;
+export type UpdateBrand = Omit<Omit<SelectBrand, "createdAt">, "creatorId">;
 
 // ---------- VIDEOS TABLE ----------
 

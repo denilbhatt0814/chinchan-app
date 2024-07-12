@@ -1,10 +1,11 @@
-import { HomeIcon, SettingsIcon, VideoIcon } from "lucide-react";
+import { HomeIcon } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import BrandSelectOnNav from "./BrandSelectOnNav";
 import { cookies } from "next/headers";
 import { getAllBrandsByCreatorId, getCreatorByUserId } from "@/db/queries";
 import ContentButtonSidenav from "./ContentButtonSidenav";
+import SettingButtonSidenav from "./SettingButtonSidenav";
 
 async function BrandDashboardSideNav() {
   const userId = cookies().get("userId")?.value;
@@ -26,9 +27,7 @@ async function BrandDashboardSideNav() {
             <ContentButtonSidenav />
           </li>
           <li className=" hover:shadow-md rounded-md py-2 px-3 dark:hover:bg-slate-900 transition duration-300">
-            <Link href={""} className="flex gap-2 items-center">
-              <SettingsIcon className="h-4 w-4" /> <span>Settings</span>
-            </Link>
+            <SettingButtonSidenav />
           </li>
         </ul>
       </div>

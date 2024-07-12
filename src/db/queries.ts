@@ -7,6 +7,7 @@ import {
   SelectBrand,
   SelectCreator,
   SelectVideo,
+  UpdateBrand,
   UpdateVideo,
   brandsTable,
   creatorsTable,
@@ -19,6 +20,16 @@ export async function createBrand(data: InsertBrand) {
   await db.insert(brandsTable).values(data);
 }
 
+export async function getBrandById(
+  id: SelectBrand["id"]
+): Promise<SelectBrand | null> {
+  return db
+    .select()
+    .from(brandsTable)
+    .where(eq(brandsTable.id, id))
+    .then((result) => (result.length > 0 ? result[0] : null));
+}
+
 export async function getBrandBySubdomain(
   subdomain: SelectBrand["subdomain"]
 ): Promise<SelectBrand | null> {
@@ -27,6 +38,10 @@ export async function getBrandBySubdomain(
     .from(brandsTable)
     .where(eq(brandsTable.subdomain, subdomain))
     .then((result) => (result.length > 0 ? result[0] : null));
+}
+
+export async function updateBrand(data: UpdateBrand) {
+  await db.update(brandsTable).set(data).where(eq(brandsTable.id, data.id));
 }
 
 // ----------- CREATOR QUERIES -----------

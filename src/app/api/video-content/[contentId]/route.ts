@@ -1,5 +1,6 @@
 import { deleteVideo, getVideoById, updateVideo } from "@/db/queries";
 import { insertVideoSchema, SelectVideo, updateVideoSchema } from "@/db/schema";
+import { getPublicIdFromUrl } from "@/lib/utils";
 import { v2 as cloudinary } from "cloudinary";
 
 export async function PATCH(request: Request) {
@@ -145,11 +146,4 @@ function removeThumbnailFromStorage(content: SelectVideo) {
   }
 
   return;
-}
-
-function getPublicIdFromUrl(url: string): string | null {
-  const regex = /\/v\d+\/([^/.]+\/[^/.]+)(?:\.[^/.]+)?$/;
-
-  const match = url.match(regex);
-  return match ? match[1] : null;
 }
