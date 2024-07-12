@@ -21,9 +21,9 @@ function BrandListSection({
       <div className="grid py-2 items-center grid-cols-1 md:grid-cols-4 justify-start gap-3 md:gap-6">
         {brands.map((brand) => {
           return (
-            <Link key={brand.id} href={`/dashboard/${brand.id}`}>
-              <BrandCard key={brand.id} brand={brand} />
-            </Link>
+            // <Link key={brand.id} href={`/dashboard/${brand.id}`}>
+            <BrandCard key={brand.id} brand={brand} />
+            // </Link>
           );
         })}
       </div>
