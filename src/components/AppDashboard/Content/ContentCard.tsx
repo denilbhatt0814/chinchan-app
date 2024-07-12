@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/card";
 import ContentCardDropDown from "./ConentCardDropDown";
 import Link from "next/link";
+import { getTimeElapsedString } from "@/lib/utils";
 
 function ContentCard({
   content,
@@ -45,7 +46,7 @@ function ContentCard({
           </div>
           <CardDescription>{content.description}</CardDescription>
           <div className="text-sm text-muted-foreground">
-            <span>3 hours ago</span>
+            <span>{getTimeElapsedString(content.createdAt)}</span>
           </div>
         </CardContent>
       </Card>
