@@ -25,7 +25,7 @@ async function ContentListSection({ brandId }: { brandId: number }) {
           })}
         </div>
       ) : (
-        <div className="flex flex-col gap-1 justify-center items-center h-[30vh] w-full rounded-md border border-dotted border-blue-300 bg-slate-100">
+        <div className="flex flex-col gap-1 justify-center items-center h-[30vh] w-full rounded-md border border-dotted border-blue-300 bg-slate-100 dark:bg-slate-900">
           <span className="text-lg font-medium">
             Let's add your First Video!!
           </span>

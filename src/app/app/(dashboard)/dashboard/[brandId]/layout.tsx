@@ -1,4 +1,4 @@
-import BrandDashboardSideNav from "@/components/AppDashboard/Brand/BrandDashboardSideNav";
+import BrandDashboardSideNav from "@/components/AppDashboard/Brand/SideNav/BrandDashboardSideNav";
 
 export default function DashboardLayout({
   children,

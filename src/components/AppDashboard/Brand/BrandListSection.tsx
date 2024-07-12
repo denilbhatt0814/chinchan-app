@@ -13,18 +13,14 @@ function BrandListSection({
   return (
     <div className="flex w-full p-4 flex-col gap-2">
       <div className="flex justify-between items-center">
-        <div className="text-lg font-semibold">Select your brand</div>
+        <div className="text-lg font-semibold">Select your Brand</div>
         <Button asChild variant="outline">
           <Link href="/dashboard/create-brand">Create Brand</Link>
         </Button>
       </div>
       <div className="grid py-2 items-center grid-cols-1 md:grid-cols-4 justify-start gap-3 md:gap-6">
         {brands.map((brand) => {
-          return (
-            // <Link key={brand.id} href={`/dashboard/${brand.id}`}>
-            <BrandCard key={brand.id} brand={brand} />
-            // </Link>
-          );
+          return <BrandCard key={brand.id} brand={brand} />;
         })}
       </div>
     </div>

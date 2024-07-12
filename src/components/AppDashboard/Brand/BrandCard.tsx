@@ -12,7 +12,12 @@ function BrandCard({
   brand: getAllBrandsByCreatorIdResponseSchema[number];
 }) {
   return (
-    <Link href={`/dashboard/${brand.id}`}>
+    <Link
+      href={`/dashboard/${brand.id}`}
+      onClick={() => {
+        localStorage.setItem("brandId", brand.id.toString());
+      }}
+    >
       <Card className="relative md:h-[20vh] md:w-[20vw] border bottom-2 overflow-hidden shadow-md hover:shadow-lg rounded-md">
         <img
           src={brand.bannerUrl!}
