@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -16,8 +16,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { insertBrandFormSchema } from "@/db/schema";
 import { useToast } from "@/components/ui/use-toast";
-import axios from "axios";
-import { LoaderIcon, UploadIcon } from "lucide-react";
+import axios, { AxiosError } from "axios";
+import {
+  CircleAlertIcon,
+  CircleCheckIcon,
+  Loader2,
+  Loader2Icon,
+  LoaderIcon,
+  UploadIcon,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import {
@@ -26,15 +33,27 @@ import {
   CloudinaryUploadWidgetResults,
 } from "next-cloudinary";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { useDebounceCallback } from "usehooks-ts";
 
 function CreateBrandForm() {
   const router = useRouter();
   const { toast } = useToast();
+
   const [isLoading, setIsLoading] = useState(false);
+
   const [logoResource, setLogoResource] =
     useState<CloudinaryUploadWidgetInfo | null>(null);
   const [bannerResource, setBannerResource] =
     useState<CloudinaryUploadWidgetInfo | null>(null);
+
+  const [subdomain, setSubdomain] = useState<string>("");
+  const debounceSetSubdomain = useDebounceCallback(setSubdomain, 500);
+  const [isCheckingSubdomain, setIsCheckingSubdomain] =
+    useState<boolean>(false);
+  const [subdomainMessage, setSubdomainMessage] = useState<{
+    status: "ERROR" | "SUCCESS" | "NA";
+    message: string;
+  }>({ status: "NA", message: "" });
 
   const form = useForm<z.infer<typeof insertBrandFormSchema>>({
     resolver: zodResolver(insertBrandFormSchema),
@@ -45,6 +64,43 @@ function CreateBrandForm() {
       bannerUrl: "",
     },
   });
+
+  async function checkSubdomainUnique() {
+    if (subdomain) {
+      setIsCheckingSubdomain(true);
+      setSubdomainMessage({ status: "NA", message: "" });
+
+      try {
+        const response = await axios.get(
+          `/api/brand/check-subdomain-unique?subdomain=${subdomain}`
+        );
+        setSubdomainMessage({
+          status: "SUCCESS",
+          message: response.data.message,
+        });
+      } catch (error) {
+        const axiosError = error as AxiosError<{
+          message: string;
+        }>;
+        setSubdomainMessage({
+          status: "ERROR",
+          message:
+            axiosError.response?.data.message ?? "Error checking subdomain",
+        });
+      } finally {
+        setIsCheckingSubdomain(false);
+      }
+    } else {
+      setSubdomainMessage({
+        status: "NA",
+        message: "",
+      });
+    }
+  }
+
+  useEffect(() => {
+    checkSubdomainUnique();
+  }, [subdomain]);
 
   async function onSubmit(values: z.infer<typeof insertBrandFormSchema>) {
     setIsLoading(true);
@@ -122,11 +178,34 @@ function CreateBrandForm() {
                     placeholder="<subdomain>"
                     className="col-span-3"
                     {...field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                      debounceSetSubdomain(e.target.value);
+                    }}
                   />
                   <p>.chinchan.tv</p>
                 </div>
               </FormControl>
-              <FormMessage />
+              <FormMessage>
+                {isCheckingSubdomain && (
+                  <div className="flex gap-1 items-center text-muted-foreground text-sm">
+                    <Loader2Icon className="animate-spin w-4 h-4" />
+                    <span>Checking if your subdomain is available...</span>
+                  </div>
+                )}
+                {subdomainMessage.status == "ERROR" && (
+                  <div className="flex gap-1 items-center text-sm">
+                    <CircleAlertIcon className="w-4 h-4" />
+                    <span>{subdomainMessage.message}</span>
+                  </div>
+                )}
+                {subdomainMessage.status == "SUCCESS" && (
+                  <div className="flex gap-1 items-center text-sm text-green-500">
+                    <CircleCheckIcon className="w-4 h-4" />
+                    <span>{subdomainMessage.message}</span>
+                  </div>
+                )}
+              </FormMessage>
             </FormItem>
           )}
         />
@@ -221,68 +300,11 @@ function CreateBrandForm() {
           </FormControl>
           <FormMessage />
         </FormItem>
-
-        {/* <div className="flex flex-col items-start gap-2">
-          <FormLabel>Upload Logo</FormLabel>
-          <FormControl>
-            <div className="flex gap-2 items-center">
-              <Button type="button" variant="outline" asChild>
-                <CldUploadButton
-                  uploadPreset="chinchan_brand_assets"
-                  onUpload={(result: CloudinaryUploadWidgetResults) => {
-                    const info = result.info as CloudinaryUploadWidgetInfo;
-                    setLogoResource(info);
-                    form.setValue("logoUrl", info.secure_url);
-                    console.log(info);
-                    console.log(form.getValues());
-                  }}
-                />
-              </Button>
-              {logoResource && (
-                <div className="flex flex-col ">
-                  <p className="text-sm font-light">File Name:</p>
-                  <p className="text-sm font-light">
-                    {logoResource.original_filename + "." + logoResource.format}
-                  </p>
-                </div>
-              )}
-            </div>
-          </FormControl>
-          <FormMessage />
-        </div>
-        <div className="flex flex-col items-start gap-2">
-          <FormLabel>Upload Banner</FormLabel>
-          <FormControl>
-            <div className="flex gap-2 items-center">
-              <Button type="button" variant="outline" asChild>
-                <CldUploadButton
-                  uploadPreset="chinchan_brand_assets"
-                  onUpload={(result: CloudinaryUploadWidgetResults) => {
-                    const info = result.info as CloudinaryUploadWidgetInfo;
-                    setBannerResource(info);
-                    form.setValue("bannerUrl", info.secure_url);
-                    console.log(info);
-                    console.log(form.getValues());
-                  }}
-                />
-              </Button>
-              {bannerResource && (
-                <div className="flex flex-col ">
-                  <p className="text-sm font-light">File Name:</p>
-                  <p className="text-sm font-light">
-                    {bannerResource.original_filename +
-                      "." +
-                      bannerResource.format}
-                  </p>
-                </div>
-              )}
-            </div>
-          </FormControl>
-          <FormMessage />
-        </div> */}
-
         <div className="py-2">
-          <Button type="submit" disabled={isLoading}>
+          <Button
+            type="submit"
+            disabled={isLoading || subdomainMessage.status == "ERROR"}
+          >
             <LoaderIcon
               className={cn("animate-spin", isLoading ? "" : "hidden")}
             />

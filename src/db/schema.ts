@@ -32,7 +32,7 @@ export type SelectCreator = typeof creatorsTable.$inferSelect;
 export const brandsTable = pgTable("brands_table", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
-  subdomain: text("subdomain").notNull(),
+  subdomain: text("subdomain").unique().notNull(),
   logoUrl: text("logo_url").notNull(),
   bannerUrl: text("banner_url").notNull(),
   creatorId: integer("creator_id")

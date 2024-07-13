@@ -209,6 +209,7 @@ function EditBrandForm({ brand }: { brand: SelectBrand }) {
             <FormField
               control={form.control}
               name="subdomain"
+              disabled
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Subdomain</FormLabel>
