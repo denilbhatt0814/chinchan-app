@@ -3,6 +3,7 @@ import Player from "next-video/player";
 import { getVideoById } from "@/db/queries";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import WatchPlayer from "@/components/Platform/WatchPlayer";
 
 async function page({
   params,
@@ -22,17 +23,16 @@ async function page({
     );
   }
 
-  return (
-    <div className="relative w-full h-full max-w-[1920px] max-h-[1080px] overflow-hidden">
-      <Player
-        src={content.mediaUrl}
-        poster={content.thumbnailUrl}
-        className="w-full h-full object-cover"
-      >
-        <h1>{content.title}</h1>
-      </Player>
-    </div>
-  );
+  // return (
+  //   <div className="relative w-full h-full max-w-[1920px] max-h-[1080px] overflow-hidden">
+  //     <Player
+  //       src={content.mediaUrl}
+  //       poster={content.thumbnailUrl}
+  //       className="w-full h-full object-cover"
+  //     ></Player>
+  //   </div>
+  // );
+  return <WatchPlayer content={content} />;
 }
 
 export default page;
