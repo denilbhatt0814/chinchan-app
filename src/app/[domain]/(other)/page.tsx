@@ -11,9 +11,6 @@ async function page({ params }: { params: { domain: string } }) {
     return (
       <div className="flex flex-col gap-1 w-full items-center justify-center">
         <h2 className="text-4xl ">😢 Brand Not Found!</h2>
-        {/* <Link className="text-lg hover:underline" href={`/${params.domain}`}>
-      Home
-    </Link> */}
       </div>
     );
   }
@@ -21,21 +18,11 @@ async function page({ params }: { params: { domain: string } }) {
   const contents = await getAllVideoBySubdomain(subdomain);
 
   return (
-    // <div className="flex flex-col w-full p-4 gap-2 min-h-screen">
-    //   <div className="flex flex-col gap-2">
-    //     <h3 className="text-xl font-semibold">Latest Release</h3>
-    //     <div className="flex">
-    //       {contents.map((content) => {
-    //         return <ContentCard key={content.id} content={content} />;
-    //       })}
-    //     </div>
-    //   </div>
-    // </div>
     <div className="flex flex-col w-full gap-2 min-h-screen">
       <HeroSection brand={brand} />
       <div className="flex flex-col p-4 gap-3">
         <h3 className="text-3xl font-semibold">Latest Release</h3>
-        <div className="flex flexflex-wrap gap-3">
+        <div className="flex flex-wrap gap-3">
           {contents.map((content) => {
             return <ContentCard key={content.id} content={content} />;
           })}
