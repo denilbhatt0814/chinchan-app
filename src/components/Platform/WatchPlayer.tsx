@@ -2,8 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Player from "next-video/player";
 import { SelectVideo } from "@/db/schema";
-import { ArrowLeft, ArrowLeftIcon, ChevronLeft, MoveLeft } from "lucide-react";
-import { Button } from "../ui/button";
+import { ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 const HIDE_TIMEOUT = 3000;

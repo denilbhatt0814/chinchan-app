@@ -23,15 +23,6 @@ async function page({
     );
   }
 
-  // return (
-  //   <div className="relative w-full h-full max-w-[1920px] max-h-[1080px] overflow-hidden">
-  //     <Player
-  //       src={content.mediaUrl}
-  //       poster={content.thumbnailUrl}
-  //       className="w-full h-full object-cover"
-  //     ></Player>
-  //   </div>
-  // );
   return <WatchPlayer content={content} />;
 }
 

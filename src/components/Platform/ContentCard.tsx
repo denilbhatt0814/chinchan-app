@@ -16,25 +16,31 @@ function ContentCard({
   content: getAllVideosBySubdomainResponseSchema[number];
 }) {
   return (
-    <Card className="w-64 h-72 shadow-sm">
-      <Link href={`/watch/${content.id}`}>
-        <div className="relative h-48 overflow-hidden rounded-t-xl">
+    <Link href={`/watch/${content.id}`}>
+      <Card className="w-[300px] max-h-[172px] hover:z-20 hover:max-h-[500px] hover:scale-105 transition-all rounded-lg overflow-hidden border-none shadow-none hover:border hover:shadow-lg dark:hover:bg-slate-900 duration-300">
+        <div className="relative">
           <img
+            alt={content.title}
+            className="w-full h-full object-cover rounded-md"
+            width="300"
+            height="172"
             src={content.thumbnailUrl}
-            alt="Video Thumbnail"
-            className="object-cover w-full h-full"
+            style={{
+              aspectRatio: "315/180",
+              objectFit: "cover",
+            }}
           />
         </div>
-        <CardContent className="p-4">
-          <h3 className="text-lg font-semibold line-clamp-2">
-            {content.title}
-          </h3>
-          <p className="text-sm text-muted-foreground line-clamp-2">
-            {content.description}
-          </p>
+        <CardContent className="p-3">
+          <div className="flex justify-between items-center">
+            <CardTitle className="text-lg font-semibold hover:underline">
+              {content.title}
+            </CardTitle>
+          </div>
+          <CardDescription>{content.description}</CardDescription>
         </CardContent>
-      </Link>
-    </Card>
+      </Card>
+    </Link>
   );
 }
 

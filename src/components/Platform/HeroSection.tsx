@@ -3,8 +3,7 @@ import React from "react";
 
 function HeroSection({ brand }: { brand: SelectBrand }) {
   return (
-    // <div className="flex flex-col min-h-[100dvh]">
-    <div className="relative h-[40vh] w-full overflow-hidden">
+    <div className="relative h-[25vh] w-full overflow-hidden">
       <img
         src={brand.bannerUrl!}
         width={1920}
@@ -25,7 +24,6 @@ function HeroSection({ brand }: { brand: SelectBrand }) {
         </div>
       </div>
     </div>
-    // </div>
   );
 }
 
