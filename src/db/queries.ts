@@ -6,14 +6,27 @@ import {
   InsertVideo,
   SelectBrand,
   SelectCreator,
+  SelectUser,
   SelectVideo,
   UpdateBrand,
   UpdateVideo,
   brandsTable,
   creatorsTable,
+  usersTable,
   videosTable,
 } from "./schema";
 
+// ----------- USER QUERIES -----------
+
+export async function getUserByEmail(
+  email: SelectUser["email"]
+): Promise<SelectUser | null> {
+  return db
+    .select()
+    .from(usersTable)
+    .where(eq(usersTable.email, email))
+    .then((result) => (result.length > 0 ? result[0] : null));
+}
 // ----------- BRAND QUERIES -----------
 
 export async function createBrand(data: InsertBrand) {

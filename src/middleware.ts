@@ -1,6 +1,8 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+export { default } from "next-auth/middleware";
+import { getToken } from "next-auth/jwt";
 
 export const config = {
   matcher: [
@@ -15,7 +17,8 @@ export const config = {
   ],
 };
 
-export default async function middleware(req: NextRequest) {
+export async function middleware(req: NextRequest) {
+  const token = await getToken({ req: req });
   const url = req.nextUrl;
   // Get hostname of request (e.g. demo.vercel.pub, demo.localhost:3000)
   let hostname = req.headers
@@ -40,10 +43,9 @@ export default async function middleware(req: NextRequest) {
 
   // rewrites for app pages
   if (hostname == `app.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`) {
-    const session = cookies().get("userId");
-    if (!session && path !== "/login") {
-      return NextResponse.redirect(new URL("/login", req.url));
-    } else if (session && path == "/login") {
+    if (!token && path !== "/sign-in") {
+      return NextResponse.redirect(new URL("/sign-in", req.url));
+    } else if (token && path == "/sign-in") {
       return NextResponse.redirect(new URL("/dashboard", req.url));
     }
     return NextResponse.rewrite(
