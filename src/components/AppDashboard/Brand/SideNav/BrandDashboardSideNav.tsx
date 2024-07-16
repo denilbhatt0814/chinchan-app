@@ -6,12 +6,20 @@ import { cookies } from "next/headers";
 import { getAllBrandsByCreatorId, getCreatorByUserId } from "@/db/queries";
 import ContentButtonSidenav from "./ContentButtonSidenav";
 import SettingButtonSidenav from "./SettingButtonSidenav";
+import { getServerSession, User } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/options";
+import { redirect } from "next/navigation";
 
 async function BrandDashboardSideNav() {
-  const userId = cookies().get("userId")?.value;
-  const creator = await getCreatorByUserId(parseInt(userId!));
+  const session = await getServerSession(authOptions);
+  const user: User = session?.user as User;
+  const userId = user.id;
+  const creatorId = user.creatorId;
+  if (!creatorId) {
+    redirect("/sign-in");
+  }
   // get all brands registered under creator
-  const brands = await getAllBrandsByCreatorId(creator?.id!);
+  const brands = await getAllBrandsByCreatorId(parseInt(creatorId));
 
   return (
     <div className="w-[20%] flex flex-col gap-2 shadow-md p-4 border border-r-1 border-y-0">

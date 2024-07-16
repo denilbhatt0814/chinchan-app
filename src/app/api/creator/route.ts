@@ -1,10 +1,21 @@
 import { createCreator } from "@/db/queries";
 import { insertCreatorSchema } from "@/db/schema";
+import { getServerSession, User } from "next-auth";
 import { cookies } from "next/headers";
+import { authOptions } from "../auth/[...nextauth]/options";
 
 export async function POST(request: Request) {
   try {
-    const userId = cookies().get("userId")?.value;
+    const session = await getServerSession(authOptions);
+    const user: User = session?.user as User;
+
+    if (!session || !session.user) {
+      return Response.json(
+        { success: false, message: "Not authenticated" },
+        { status: 401 }
+      );
+    }
+    const userId = user.id;
 
     const data = {
       userId: userId,

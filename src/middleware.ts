@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 export { default } from "next-auth/middleware";
-import { getToken } from "next-auth/jwt";
+import { getToken, JWT } from "next-auth/jwt";
 
 export const config = {
   matcher: [
@@ -43,9 +43,9 @@ export async function middleware(req: NextRequest) {
 
   // rewrites for app pages
   if (hostname == `app.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`) {
-    if (!token && path !== "/sign-in") {
+    if (!token?.id && path !== "/sign-in") {
       return NextResponse.redirect(new URL("/sign-in", req.url));
-    } else if (token && path == "/sign-in") {
+    } else if (token?.id && path == "/sign-in") {
       return NextResponse.redirect(new URL("/dashboard", req.url));
     }
     return NextResponse.rewrite(

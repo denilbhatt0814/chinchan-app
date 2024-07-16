@@ -12,10 +12,20 @@ import { cookies } from "next/headers";
 import React from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { getServerSession, User } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/options";
+import { redirect } from "next/navigation";
 
 async function page() {
-  const userId = cookies().get("userId")?.value;
-  const creator = await getCreatorByUserId(parseInt(userId!));
+  const session = await getServerSession(authOptions);
+  const user: User = session?.user as User;
+  const userId = user.id;
+  const creatorId = user.creatorId;
+  if (!creatorId) {
+    redirect("/sign-in");
+  }
+
+  const creator = await getCreatorByUserId(parseInt(user.creatorId!));
   // get all brands registered under creator
   const brands = await getAllBrandsByCreatorId(creator?.id!);
   // const brands = [
@@ -32,7 +42,7 @@ async function page() {
 
   return (
     <div className="flex flex-col w-full p-4 gap-2 min-h-screen">
-      <div className="text-2xl font-semibold px-4">👋 Hi John!</div>
+      <div className="text-2xl font-semibold px-4">👋 Hi {user.name}!</div>
 
       <div className="flex-grow w-full flex flex-col gap-2">
         {brands.length === 0 ? (
