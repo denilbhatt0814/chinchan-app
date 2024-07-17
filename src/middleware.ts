@@ -49,7 +49,7 @@ export async function middleware(req: NextRequest) {
       return NextResponse.redirect(new URL("/dashboard", req.url));
     }
     return NextResponse.rewrite(
-      new URL(`/app${path === "/" ? "" : path}`, req.url)
+      new URL(`/app${path === "/" ? "/dashboard" : path}`, req.url)
     );
   }
 
