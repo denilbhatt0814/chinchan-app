@@ -58,12 +58,12 @@ function EditBrandForm({ brand }: { brand: SelectBrand }) {
           withCredentials: true,
         }
       );
-      console.log(response.data);
+      if (process.env.NODE_ENV != "production") console.log(response.data);
       toast({ title: "✅ Brand updated successfully..!!" });
       setIsLoading(false);
       router.push(`/dashboard/${brand.id}`);
     } catch (error) {
-      console.log(error);
+      if (process.env.NODE_ENV != "production") console.log(error);
       setIsLoading(false);
       toast({
         title: "😕 Opps, Something went wrong!",
@@ -76,15 +76,19 @@ function EditBrandForm({ brand }: { brand: SelectBrand }) {
     const info = result.info as CloudinaryUploadWidgetInfo;
     setLogoResource(info);
     form.setValue("logoUrl", info.secure_url);
-    console.log(info);
-    console.log(form.getValues());
+    if (process.env.NODE_ENV != "production") {
+      console.log(info);
+      console.log(form.getValues());
+    }
   };
   const handleBannerUpload = (result: CloudinaryUploadWidgetResults) => {
     const info = result.info as CloudinaryUploadWidgetInfo;
     setBannerResource(info);
     form.setValue("bannerUrl", info.secure_url);
-    console.log(info);
-    console.log(form.getValues());
+    if (process.env.NODE_ENV != "production") {
+      console.log(info);
+      console.log(form.getValues());
+    }
   };
 
   return (
@@ -242,7 +246,8 @@ function EditBrandForm({ brand }: { brand: SelectBrand }) {
               <Button
                 type="submit"
                 onClick={() => {
-                  console.log(form.getValues());
+                  if (process.env.NODE_ENV != "production")
+                    console.log(form.getValues());
                 }}
                 disabled={isLoading}
               >

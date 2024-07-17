@@ -31,12 +31,12 @@ function ContentCardDropDown({
       const response = await axios.delete(`/api/video-content/${contentId}`, {
         withCredentials: true,
       });
-      console.log(response.data);
+      if (process.env.NODE_ENV != "production") console.log(response.data);
       toast({ title: "✅ Content deleted successfully..!!" });
 
       router.refresh();
     } catch (error) {
-      console.log(error);
+      if (process.env.NODE_ENV != "production") console.log(error);
       toast({
         title: "😕 Opps, Something went wrong!",
         variant: "destructive",

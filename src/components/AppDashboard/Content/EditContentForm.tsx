@@ -59,12 +59,12 @@ function EditContentForm({ content }: { content: SelectVideo }) {
           withCredentials: true,
         }
       );
-      console.log(response.data);
+      if (process.env.NODE_ENV != "production") console.log(response.data);
       toast({ title: "✅ Content updated successfully..!!" });
       setIsLoading(false);
       router.refresh();
     } catch (error) {
-      console.log(error);
+      if (process.env.NODE_ENV != "production") console.log(error);
       setIsLoading(false);
       toast({
         title: "😕 Opps, Something went wrong!",
@@ -82,16 +82,20 @@ function EditContentForm({ content }: { content: SelectVideo }) {
       form.setValue("thumbnailUrl", info.thumbnail_url);
     }
 
-    console.log(info);
-    console.log(form.getValues());
+    if (process.env.NODE_ENV != "production") {
+      console.log(info);
+      console.log(form.getValues());
+    }
   };
 
   const handleThumbnailUpload = (result: CloudinaryUploadWidgetResults) => {
     const info = result.info as CloudinaryUploadWidgetInfo;
     setUploadThumbnailResource(info);
     form.setValue("thumbnailUrl", info.secure_url);
-    console.log(info);
-    console.log(form.getValues());
+    if (process.env.NODE_ENV != "production") {
+      console.log(info);
+      console.log(form.getValues());
+    }
   };
 
   return (
@@ -250,7 +254,8 @@ function EditContentForm({ content }: { content: SelectVideo }) {
               <Button
                 type="submit"
                 onClick={() => {
-                  console.log(form.getValues());
+                  if (process.env.NODE_ENV != "production")
+                    console.log(form.getValues());
                 }}
                 disabled={isLoading}
               >

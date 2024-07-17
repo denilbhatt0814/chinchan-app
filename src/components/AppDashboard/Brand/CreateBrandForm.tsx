@@ -115,12 +115,12 @@ function CreateBrandForm() {
           withCredentials: true,
         }
       );
-      console.log(response.data);
+      if (process.env.NODE_ENV != "production") console.log(response.data);
       toast({ title: "🥳 New brand created successfully..!!" });
       setIsLoading(false);
       router.push("/dashboard");
     } catch (error) {
-      console.log(error);
+      if (process.env.NODE_ENV != "production") console.log(error);
       setIsLoading(false);
       toast({
         title: "😕 Opps, Something went wrong!",
@@ -133,15 +133,19 @@ function CreateBrandForm() {
     const info = result.info as CloudinaryUploadWidgetInfo;
     setLogoResource(info);
     form.setValue("logoUrl", info.secure_url);
-    console.log(info);
-    console.log(form.getValues());
+    if (process.env.NODE_ENV != "production") {
+      console.log(info);
+      console.log(form.getValues());
+    }
   };
   const handleBannerUpload = (result: CloudinaryUploadWidgetResults) => {
     const info = result.info as CloudinaryUploadWidgetInfo;
     setBannerResource(info);
     form.setValue("bannerUrl", info.secure_url);
-    console.log(info);
-    console.log(form.getValues());
+    if (process.env.NODE_ENV != "production") {
+      console.log(info);
+      console.log(form.getValues());
+    }
   };
 
   return (

@@ -51,7 +51,8 @@ function AddContentForm({ brandId }: { brandId: number }) {
 
   async function onSubmit(values: z.infer<typeof insertVideoFormSchema>) {
     setIsLoading(true);
-    console.log(values, typeof brandId);
+    if (process.env.NODE_ENV != "production")
+      console.log(values, typeof brandId);
     try {
       const response = await axios.post(
         "/api/video-content",
@@ -62,13 +63,13 @@ function AddContentForm({ brandId }: { brandId: number }) {
           withCredentials: true,
         }
       );
-      console.log(response.data);
+      if (process.env.NODE_ENV != "production") console.log(response.data);
       toast({ title: "🤘 New content added successfully..!!" });
       setIsLoading(false);
 
       router.replace(`/dashboard/${brandId}`);
     } catch (error) {
-      console.log(error);
+      if (process.env.NODE_ENV != "production") console.log(error);
       setIsLoading(false);
       toast({
         title: "😕 Opps, Something went wrong!",
@@ -86,16 +87,20 @@ function AddContentForm({ brandId }: { brandId: number }) {
       form.setValue("thumbnailUrl", info.thumbnail_url);
     }
 
-    console.log(info);
-    console.log(form.getValues());
+    if (process.env.NODE_ENV != "production") {
+      console.log(info);
+      console.log(form.getValues());
+    }
   };
 
   const handleThumbnailUpload = (result: CloudinaryUploadWidgetResults) => {
     const info = result.info as CloudinaryUploadWidgetInfo;
     setUploadThumbnailResource(info);
     form.setValue("thumbnailUrl", info.secure_url);
-    console.log(info);
-    console.log(form.getValues());
+    if (process.env.NODE_ENV != "production") {
+      console.log(info);
+      console.log(form.getValues());
+    }
   };
 
   return (
@@ -249,7 +254,8 @@ function AddContentForm({ brandId }: { brandId: number }) {
               <Button
                 type="submit"
                 onClick={() => {
-                  console.log(form.getValues());
+                  if (process.env.NODE_ENV != "production")
+                    console.log(form.getValues());
                 }}
                 disabled={isLoading}
               >

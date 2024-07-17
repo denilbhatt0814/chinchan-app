@@ -65,7 +65,7 @@ function SignInForm() {
         });
       }
     }
-    console.log("RESULT:", result);
+    if (process.env.NODE_ENV != "production") console.log("RESULT:", result);
     if (result?.url) {
       toast({
         title: "✅ Logged in successfully !!",

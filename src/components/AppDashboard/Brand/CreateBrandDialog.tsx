@@ -60,13 +60,13 @@ function CreateBrandDialog() {
           withCredentials: true,
         }
       );
-      console.log(response.data);
+      if (process.env.NODE_ENV != "production") console.log(response.data);
       toast({ title: "🥳 New brand created successfully..!!" });
       setIsLoading(false);
       dialogClose();
       router.refresh();
     } catch (error) {
-      console.log(error);
+      if (process.env.NODE_ENV != "production") console.log(error);
       setIsLoading(false);
       toast({
         title: "😕 Opps, Something went wrong!",

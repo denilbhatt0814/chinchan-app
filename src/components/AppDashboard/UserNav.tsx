@@ -14,7 +14,7 @@ import { redirect } from "next/navigation";
 
 function UserNav() {
   const { data: session } = useSession();
-  console.log("DATA:", session);
+  if (process.env.NODE_ENV != "production") console.log("DATA:", session);
   const user: User = session?.user as User;
 
   if (!session) {

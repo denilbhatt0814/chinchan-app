@@ -26,7 +26,7 @@ export function BrandSelectOnNav({
     <Select
       value={brandId!}
       onValueChange={(value: string) => {
-        console.log(value);
+        if (process.env.NODE_ENV != "production") console.log(value);
         localStorage.setItem("brandId", value);
         router.push(`/dashboard/${value}`);
       }}
