@@ -26,7 +26,7 @@ import {
   UploadIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import {
   CldUploadButton,
   CloudinaryUploadWidgetInfo,
@@ -35,8 +35,18 @@ import {
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { useDebounceCallback } from "usehooks-ts";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
+import { User } from "next-auth";
 
 function CreateBrandForm() {
+  const { data: session } = useSession();
+
+  if (process.env.NODE_ENV != "production") console.log("DATA:", session);
+  const user: User = session?.user as User;
+  if (!session || !user || !user.creatorId) {
+    redirect("/sign-in");
+  }
+
   const router = useRouter();
   const { toast } = useToast();
 
@@ -63,6 +73,7 @@ function CreateBrandForm() {
       subdomain: "",
       logoUrl: "",
       bannerUrl: "",
+      creatorId: parseInt(user.creatorId!),
     },
   });
 
@@ -157,164 +168,177 @@ function CreateBrandForm() {
         </p>
       </div>
 
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <div className="grid md:grid-cols-2 gap-4 items-start">
+          <div className="flex flex-col items-start gap-2">
+            <FormItem className="w-full">
+              <FormLabel className="flex justify-between py-1 items-center">
+                <div>Banner</div>
+                {(bannerResource || form.getValues().bannerUrl) && (
+                  <CldUploadButton
+                    uploadPreset="chinchan_brand_assets"
+                    onUpload={handleBannerUpload}
+                  >
+                    <div className="flex items-center p-0 gap-1 rounded-md hover:bg-slate-50 dark:hover:bg-slate-800 hover:shadow-sm">
+                      <p className="text-sm">Change</p>
+                      <UploadIcon className="w-4 h-4" />
+                    </div>
+                  </CldUploadButton>
+                )}
+              </FormLabel>
               <FormControl>
-                <Input placeholder="Acme Inc." {...field} />
+                <>
+                  {/* UPLOAD BOX */}
+                  {!(bannerResource || form.getValues().bannerUrl) && (
+                    <div className="flex flex-col h-[30vh] light:bg-slate-100 rounded-md w-full gap-2 items-center justify-center border border-dotted border-blue-400">
+                      <p className="text-sm font-semibold">
+                        🎞️ Select a Banner
+                      </p>
+                      <Button type="button" variant="outline" asChild>
+                        <CldUploadButton
+                          uploadPreset="chinchan_brand_assets"
+                          onUpload={handleBannerUpload}
+                        />
+                      </Button>
+                    </div>
+                  )}
+                  {/* BANNER BOX */}
+                  {(bannerResource || form.getValues().bannerUrl) && (
+                    <div className="">
+                      <AspectRatio ratio={3 / 1}>
+                        <Image
+                          src={form.getValues().bannerUrl!}
+                          alt="Banner Image"
+                          width={1500}
+                          height={500}
+                          className="h-full w-full object-cover"
+                        />
+                      </AspectRatio>
+                    </div>
+                  )}
+                </>
               </FormControl>
               <FormMessage />
             </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="subdomain"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Subdomain</FormLabel>
+
+            <FormItem className="w-full">
+              <FormLabel className="flex justify-between py-1 items-center">
+                <div>Logo</div>
+                {(logoResource || form.getValues().logoUrl) && (
+                  <CldUploadButton
+                    uploadPreset="chinchanuploads"
+                    onUpload={handleLogoUpload}
+                  >
+                    <div className="flex items-center p-0 gap-1 rounded-md hover:bg-slate-50 dark:hover:bg-slate-800 hover:shadow-sm">
+                      <p className="text-sm">Change</p>
+                      <UploadIcon className="w-4 h-4" />
+                    </div>
+                  </CldUploadButton>
+                )}
+              </FormLabel>
               <FormControl>
-                <div className="grid grid-cols-4 gap-0.5 items-center">
-                  <Input
-                    placeholder="<subdomain>"
-                    className="col-span-3"
-                    {...field}
-                    onChange={(e) => {
-                      field.onChange(e);
-                      debounceSetSubdomain(e.target.value);
-                    }}
-                  />
-                  <p>.chinchan.tv</p>
+                <div className="grid grid-cols-2">
+                  {/* UPLOAD BOX */}
+                  {!(logoResource || form.getValues().logoUrl) && (
+                    <div className="flex flex-col col-span-1 h-[20vh] light-slate-100 rounded-md w-full gap-2 items-center justify-center border border-dotted border-blue-400">
+                      <p className="text-sm font-semibold">✨ Select a Logo</p>
+                      <Button type="button" variant="outline" asChild>
+                        <CldUploadButton
+                          uploadPreset="chinchan_brand_assets"
+                          onUpload={handleLogoUpload}
+                        />
+                      </Button>
+                    </div>
+                  )}
+                  {/* LOGO PREVIEW BOX */}
+                  {(logoResource || form.getValues().logoUrl) && (
+                    <div className="col-span-1 w-[15vh] h-[15vh]">
+                      <AspectRatio ratio={1 / 1}>
+                        <Image
+                          src={form.getValues().logoUrl!}
+                          width={500}
+                          height={500}
+                          alt="Logo Image"
+                          className="object-cover"
+                        />
+                      </AspectRatio>
+                    </div>
+                  )}
                 </div>
               </FormControl>
-              <FormMessage>
-                {isCheckingSubdomain && (
-                  <div className="flex gap-1 items-center text-muted-foreground text-sm">
-                    <Loader2Icon className="animate-spin w-4 h-4" />
-                    <span>Checking if your subdomain is available...</span>
-                  </div>
-                )}
-                {subdomainMessage.status == "ERROR" && (
-                  <div className="flex gap-1 items-center text-sm">
-                    <CircleAlertIcon className="w-4 h-4" />
-                    <span>{subdomainMessage.message}</span>
-                  </div>
-                )}
-                {subdomainMessage.status == "SUCCESS" && (
-                  <div className="flex gap-1 items-center text-sm text-green-500">
-                    <CircleCheckIcon className="w-4 h-4" />
-                    <span>{subdomainMessage.message}</span>
-                  </div>
-                )}
-              </FormMessage>
+              <FormMessage />
             </FormItem>
-          )}
-        />
-        <FormItem className="w-full">
-          <FormLabel className="flex justify-between py-1 items-center">
-            <div>Banner</div>
-            {(bannerResource || form.getValues().bannerUrl) && (
-              <CldUploadButton
-                uploadPreset="chinchan_brand_assets"
-                onUpload={handleBannerUpload}
-              >
-                <div className="flex items-center p-0 gap-1 rounded-md hover:bg-slate-50 dark:hover:bg-slate-800 hover:shadow-sm">
-                  <p className="text-sm">Change</p>
-                  <UploadIcon className="w-4 h-4" />
-                </div>
-              </CldUploadButton>
-            )}
-          </FormLabel>
-          <FormControl>
-            <>
-              {/* UPLOAD BOX */}
-              {!(bannerResource || form.getValues().bannerUrl) && (
-                <div className="flex flex-col h-[30vh] light:bg-slate-100 rounded-md w-full gap-2 items-center justify-center border border-dotted border-blue-400">
-                  <p className="text-sm font-semibold">🎞️ Select a Banner</p>
-                  <Button type="button" variant="outline" asChild>
-                    <CldUploadButton
-                      uploadPreset="chinchan_brand_assets"
-                      onUpload={handleBannerUpload}
-                    />
-                  </Button>
-                </div>
+          </div>
+          <div className="space-y-4">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Acme Inc." {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
               )}
-              {/* BANNER BOX */}
-              {(bannerResource || form.getValues().bannerUrl) && (
-                <div className="">
-                  <AspectRatio ratio={3 / 1}>
-                    <Image
-                      src={form.getValues().bannerUrl!}
-                      alt="Banner Image"
-                      className="h-full w-full object-cover"
-                    />
-                  </AspectRatio>
-                </div>
-              )}
-            </>
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-
-        <FormItem className="w-full">
-          <FormLabel className="flex justify-between py-1 items-center">
-            <div>Logo</div>
-            {(logoResource || form.getValues().logoUrl) && (
-              <CldUploadButton
-                uploadPreset="chinchanuploads"
-                onUpload={handleLogoUpload}
-              >
-                <div className="flex items-center p-0 gap-1 rounded-md hover:bg-slate-50 dark:hover:bg-slate-800 hover:shadow-sm">
-                  <p className="text-sm">Change</p>
-                  <UploadIcon className="w-4 h-4" />
-                </div>
-              </CldUploadButton>
-            )}
-          </FormLabel>
-          <FormControl>
-            <div className="grid grid-cols-2">
-              {/* UPLOAD BOX */}
-              {!(logoResource || form.getValues().logoUrl) && (
-                <div className="flex flex-col col-span-1 h-[20vh] light-slate-100 rounded-md w-full gap-2 items-center justify-center border border-dotted border-blue-400">
-                  <p className="text-sm font-semibold">✨ Select a Logo</p>
-                  <Button type="button" variant="outline" asChild>
-                    <CldUploadButton
-                      uploadPreset="chinchan_brand_assets"
-                      onUpload={handleLogoUpload}
-                    />
-                  </Button>
-                </div>
-              )}
-              {/* LOGO PREVIEW BOX */}
-              {(logoResource || form.getValues().logoUrl) && (
-                <div className="col-span-1 w-[15vh] h-[15vh]">
-                  <AspectRatio ratio={1 / 1}>
-                    <Image
-                      src={form.getValues().logoUrl!}
-                      alt="Logo Image"
-                      className="object-cover"
-                    />
-                  </AspectRatio>
-                </div>
-              )}
-            </div>
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-        <div className="py-2">
-          <Button
-            type="submit"
-            disabled={isLoading || subdomainMessage.status == "ERROR"}
-          >
-            <LoaderIcon
-              className={cn("animate-spin", isLoading ? "" : "hidden")}
             />
-            Create
-          </Button>
+            <FormField
+              control={form.control}
+              name="subdomain"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Subdomain</FormLabel>
+                  <FormControl>
+                    <div className="grid grid-cols-4 gap-0.5 items-center">
+                      <Input
+                        placeholder="<subdomain>"
+                        className="col-span-3"
+                        {...field}
+                        onChange={(e) => {
+                          field.onChange(e);
+                          debounceSetSubdomain(e.target.value);
+                        }}
+                      />
+                      <p>.chinchan.tv</p>
+                    </div>
+                  </FormControl>
+                  <FormMessage>
+                    {isCheckingSubdomain && (
+                      <div className="flex gap-1 items-center text-muted-foreground text-sm">
+                        <Loader2Icon className="animate-spin w-4 h-4" />
+                        <span>Checking if your subdomain is available...</span>
+                      </div>
+                    )}
+                    {subdomainMessage.status == "ERROR" && (
+                      <div className="flex gap-1 items-center text-sm">
+                        <CircleAlertIcon className="w-4 h-4" />
+                        <span>{subdomainMessage.message}</span>
+                      </div>
+                    )}
+                    {subdomainMessage.status == "SUCCESS" && (
+                      <div className="flex gap-1 items-center text-sm text-green-500">
+                        <CircleCheckIcon className="w-4 h-4" />
+                        <span>{subdomainMessage.message}</span>
+                      </div>
+                    )}
+                  </FormMessage>
+                </FormItem>
+              )}
+            />
+
+            <div className="py-2">
+              <Button
+                type="submit"
+                disabled={isLoading || subdomainMessage.status == "ERROR"}
+              >
+                <LoaderIcon
+                  className={cn("animate-spin", isLoading ? "" : "hidden")}
+                />
+                Create
+              </Button>
+            </div>
+          </div>
         </div>
       </form>
     </Form>

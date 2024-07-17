@@ -6,7 +6,7 @@ export async function POST(request: Request) {
     const data = await request.json();
 
     // add creator id to data
-    data.creatorId = 1;
+    // data.creatorId = 1;
 
     const result = insertBrandSchema.safeParse(data);
 

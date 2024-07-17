@@ -141,6 +141,8 @@ function EditBrandForm({ brand }: { brand: SelectBrand }) {
                         <Image
                           src={form.getValues().bannerUrl!}
                           alt="Banner Image"
+                          height={500}
+                          width={1500}
                           className="h-full w-full object-cover"
                         />
                       </AspectRatio>
@@ -187,6 +189,8 @@ function EditBrandForm({ brand }: { brand: SelectBrand }) {
                         <Image
                           src={form.getValues().logoUrl!}
                           alt="Logo Image"
+                          width={500}
+                          height={500}
                           className="object-cover"
                         />
                       </AspectRatio>

@@ -48,6 +48,7 @@ export const insertBrandFormSchema = insertBrandSchema.pick({
   subdomain: true,
   logoUrl: true,
   bannerUrl: true,
+  creatorId: true,
 });
 
 export const selectBrandSchema = createSelectSchema(brandsTable);
