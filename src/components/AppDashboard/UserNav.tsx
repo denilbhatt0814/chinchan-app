@@ -10,11 +10,24 @@ import {
 import { Button } from "@/components/ui/button";
 import { signOut, useSession } from "next-auth/react";
 import { User } from "next-auth";
+import { redirect } from "next/navigation";
 
 function UserNav() {
   const { data: session } = useSession();
   console.log("DATA:", session);
   const user: User = session?.user as User;
+
+  if (!session) {
+    return (
+      <Button
+        onClick={() => {
+          redirect("/sign-in");
+        }}
+      >
+        Login
+      </Button>
+    );
+  }
 
   return (
     <DropdownMenu>
