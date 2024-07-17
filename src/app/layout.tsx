@@ -4,6 +4,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/components/theme-provider";
 import AuthProvider from "@/context/AuthProvider";
+import { CSPostHogProvider } from "@/context/CSPostHogProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,17 +21,19 @@ export default function RootLayout({
   return (
     <html lang="en">
       <AuthProvider>
-        <body className={inter.className}>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="light"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <main>{children}</main>
-            <Toaster />
-          </ThemeProvider>
-        </body>
+        <CSPostHogProvider>
+          <body className={inter.className}>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="light"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <main>{children}</main>
+              <Toaster />
+            </ThemeProvider>
+          </body>
+        </CSPostHogProvider>
       </AuthProvider>
     </html>
   );
