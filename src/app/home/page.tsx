@@ -30,10 +30,16 @@ const Hero = () => {
         </h3>
         <div className="not-prose mt-6 flex gap-2 md:mt-12">
           <Button asChild>
-            <Link href="http://app.localhost:3000/login">Sign Up</Link>
+            <Link
+              href={`http://app.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/sign-in`}
+            >
+              Sign Up
+            </Link>
           </Button>
           <Button variant="outline" asChild>
-            <Link href="http://app.localhost:3000/dashboard">
+            <Link
+              href={`http://app.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/dashboard`}
+            >
               Go to App -{">"}
             </Link>
           </Button>
