@@ -8,16 +8,23 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
+import { User } from "next-auth";
 
 function UserNav() {
+  const { data: session } = useSession();
+  console.log("DATA:", session);
+  const user: User = session?.user as User;
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button size="icon" asChild>
+        <Button className="rounded-full" asChild>
           <Avatar className="w-8 h-8">
-            <AvatarImage src="https://pbs.twimg.com/profile_images/1280536603757166592/9sdH9Hxp_400x400.jpg" />
-            <AvatarFallback>DB</AvatarFallback>
+            <AvatarImage src={user.image!} />
+            <AvatarFallback>
+              {user.name?.charAt(0).toUpperCase()}
+            </AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>

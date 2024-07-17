@@ -53,6 +53,16 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
+    // async signIn({ account, profile }) {
+    //   if (account?.provider === "google" && profile?.email) {
+    //     console.log("account", account, profile);
+    //     const user = await getUserByEmail(profile.email);
+    //     if (!user) {
+    //       return false;
+    //     }
+    //   }
+    //   return true;
+    // },
     async session({ session, token }) {
       if (token) {
         session.user.id = token.id;

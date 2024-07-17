@@ -67,6 +67,9 @@ function SignInForm() {
     }
     console.log("RESULT:", result);
     if (result?.url) {
+      toast({
+        title: "✅ Logged in successfully !!",
+      });
       router.replace("/dashboard");
     }
     setIsLoading(false);
@@ -123,12 +126,14 @@ function SignInForm() {
             </CardContent>
             <CardFooter className="flex justify-around">
               <Button type="submit" disabled={isLoading}>
-                <div className="flex gap-1">
-                  {isLoading && <LoaderCircleIcon className="animate-spin" />}
+                <div className="flex items-center gap-1">
+                  {isLoading && (
+                    <LoaderCircleIcon className="w-4 h-4 animate-spin" />
+                  )}
                   <div>Login</div>
                 </div>
               </Button>
-              <Button
+              {/* <Button
                 type="button"
                 disabled={isLoading}
                 onClick={() => {
@@ -139,7 +144,7 @@ function SignInForm() {
                   {isLoading && <LoaderCircleIcon className="animate-spin" />}
                   <div>Google</div>
                 </div>
-              </Button>
+              </Button> */}
             </CardFooter>
           </form>
         </Form>
