@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { signOut, useSession } from "next-auth/react";
 import { User } from "next-auth";
 import { redirect } from "next/navigation";
+import posthog from "posthog-js";
 
 function UserNav() {
   const { data: session } = useSession();
@@ -42,7 +43,14 @@ function UserNav() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => signOut()}>Logout</DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => {
+            signOut();
+            if (process.env.NODE_ENV == "production") posthog.reset();
+          }}
+        >
+          Logout
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
