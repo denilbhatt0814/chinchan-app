@@ -1,10 +1,11 @@
 import { SelectBrand } from "@/db/schema";
+import Image from "next/image";
 import React from "react";
 
 function HeroSection({ brand }: { brand: SelectBrand }) {
   return (
     <div className="relative h-[25vh] w-full overflow-hidden">
-      <img
+      <Image
         src={brand.bannerUrl!}
         width={1920}
         height={1080}
@@ -13,7 +14,7 @@ function HeroSection({ brand }: { brand: SelectBrand }) {
       />
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
-          <img
+          <Image
             src={brand.logoUrl!}
             width={64}
             height={64}

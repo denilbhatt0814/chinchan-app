@@ -27,6 +27,7 @@ import {
 } from "next-cloudinary";
 import Player from "next-video/player";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
+import Image from "next/image";
 
 function AddContentForm({ brandId }: { brandId: number }) {
   const router = useRouter();
@@ -117,17 +118,16 @@ function AddContentForm({ brandId }: { brandId: number }) {
                   <CldUploadButton
                     uploadPreset="chinchanuploads"
                     onUpload={handleVideoUpload}
-                    children={
-                      <div className="flex items-center p-0 gap-1 rounded-md hover:bg-slate-50 dark:hover:bg-slate-800 hover:shadow-sm">
-                        <p className="text-sm">
-                          {uploadVideoResource.original_filename +
-                            "." +
-                            uploadVideoResource.format}
-                        </p>
-                        <UploadIcon className="w-4 h-4" />
-                      </div>
-                    }
-                  />
+                  >
+                    <div className="flex items-center p-0 gap-1 rounded-md hover:bg-slate-50 dark:hover:bg-slate-800 hover:shadow-sm">
+                      <p className="text-sm">
+                        {uploadVideoResource.original_filename +
+                          "." +
+                          uploadVideoResource.format}
+                      </p>
+                      <UploadIcon className="w-4 h-4" />
+                    </div>
+                  </CldUploadButton>
                 )}
               </FormLabel>
               <FormControl>
@@ -169,13 +169,12 @@ function AddContentForm({ brandId }: { brandId: number }) {
                   <CldUploadButton
                     uploadPreset="chinchanuploads"
                     onUpload={handleThumbnailUpload}
-                    children={
-                      <div className="flex items-center p-0 gap-1 rounded-md hover:bg-slate-50 dark:hover:bg-slate-800 hover:shadow-sm">
-                        <p className="text-sm">Change</p>
-                        <UploadIcon className="w-4 h-4" />
-                      </div>
-                    }
-                  />
+                  >
+                    <div className="flex items-center p-0 gap-1 rounded-md hover:bg-slate-50 dark:hover:bg-slate-800 hover:shadow-sm">
+                      <p className="text-sm">Change</p>
+                      <UploadIcon className="w-4 h-4" />
+                    </div>
+                  </CldUploadButton>
                 )}
               </FormLabel>
               <FormControl>
@@ -201,8 +200,9 @@ function AddContentForm({ brandId }: { brandId: number }) {
                     form.getValues().thumbnailUrl) && (
                     <div className="col-span-2 h-[20vh]">
                       <AspectRatio ratio={16 / 9}>
-                        <img
+                        <Image
                           src={form.getValues().thumbnailUrl}
+                          alt="Thumbnail Image"
                           className="h-full w-full object-cover"
                         />
                       </AspectRatio>

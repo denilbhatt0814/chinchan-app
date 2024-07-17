@@ -30,6 +30,7 @@ import {
   CloudinaryUploadWidgetResults,
 } from "next-cloudinary";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
+import Image from "next/image";
 
 function EditBrandForm({ brand }: { brand: SelectBrand }) {
   const router = useRouter();
@@ -105,13 +106,12 @@ function EditBrandForm({ brand }: { brand: SelectBrand }) {
                   <CldUploadButton
                     uploadPreset="chinchan_brand_assets"
                     onUpload={handleBannerUpload}
-                    children={
-                      <div className="flex items-center p-0 gap-1 rounded-md hover:bg-slate-50 dark:hover:bg-slate-800 hover:shadow-sm">
-                        <p className="text-sm">Change</p>
-                        <UploadIcon className="w-4 h-4" />
-                      </div>
-                    }
-                  />
+                  >
+                    <div className="flex items-center p-0 gap-1 rounded-md hover:bg-slate-50 dark:hover:bg-slate-800 hover:shadow-sm">
+                      <p className="text-sm">Change</p>
+                      <UploadIcon className="w-4 h-4" />
+                    </div>
+                  </CldUploadButton>
                 )}
               </FormLabel>
               <FormControl>
@@ -134,8 +134,9 @@ function EditBrandForm({ brand }: { brand: SelectBrand }) {
                   {(bannerResource || form.getValues().bannerUrl) && (
                     <div className="">
                       <AspectRatio ratio={3 / 1}>
-                        <img
+                        <Image
                           src={form.getValues().bannerUrl!}
+                          alt="Banner Image"
                           className="h-full w-full object-cover"
                         />
                       </AspectRatio>
@@ -153,13 +154,12 @@ function EditBrandForm({ brand }: { brand: SelectBrand }) {
                   <CldUploadButton
                     uploadPreset="chinchanuploads"
                     onUpload={handleLogoUpload}
-                    children={
-                      <div className="flex items-center p-0 gap-1 rounded-md hover:bg-slate-50 dark:hover:bg-slate-800 hover:shadow-sm">
-                        <p className="text-sm">Change</p>
-                        <UploadIcon className="w-4 h-4" />
-                      </div>
-                    }
-                  />
+                  >
+                    <div className="flex items-center p-0 gap-1 rounded-md hover:bg-slate-50 dark:hover:bg-slate-800 hover:shadow-sm">
+                      <p className="text-sm">Change</p>
+                      <UploadIcon className="w-4 h-4" />
+                    </div>
+                  </CldUploadButton>
                 )}
               </FormLabel>
               <FormControl>
@@ -180,8 +180,9 @@ function EditBrandForm({ brand }: { brand: SelectBrand }) {
                   {(logoResource || form.getValues().logoUrl) && (
                     <div className="col-span-1 w-[15vh] h-[15vh]">
                       <AspectRatio ratio={1 / 1}>
-                        <img
+                        <Image
                           src={form.getValues().logoUrl!}
+                          alt="Logo Image"
                           className="object-cover"
                         />
                       </AspectRatio>

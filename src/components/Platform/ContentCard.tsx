@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/card";
 import { getAllVideosBySubdomainResponseSchema } from "@/db/queries";
 import Link from "next/link";
+import Image from "next/image";
 
 function ContentCard({
   content,
@@ -19,7 +20,7 @@ function ContentCard({
     <Link href={`/watch/${content.id}`}>
       <Card className="w-[300px] max-h-[172px] hover:z-20 hover:max-h-[500px] hover:scale-105 transition-all rounded-lg overflow-hidden border-none shadow-none hover:border hover:shadow-lg dark:hover:bg-slate-900 duration-300">
         <div className="relative">
-          <img
+          <Image
             alt={content.title}
             className="w-full h-full object-cover rounded-md"
             width="300"

@@ -85,7 +85,7 @@ function CreateBrandDialog() {
           <DialogTitle>Create your Brand</DialogTitle>
           <DialogDescription>
             Start your journey on Chinchan by adding your brand details. Click
-            add when you're done.
+            add when you&apos;re done.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>

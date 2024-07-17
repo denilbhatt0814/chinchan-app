@@ -21,15 +21,15 @@ export function BrandSelectOnNav({
   brands: getAllBrandsByCreatorIdResponseSchema;
 }) {
   const router = useRouter();
+  const brandId = localStorage.getItem("brandId");
   return (
     <Select
-      value={localStorage.getItem("brandId")}
+      value={brandId!}
       onValueChange={(value: string) => {
         console.log(value);
         localStorage.setItem("brandId", value);
         router.push(`/dashboard/${value}`);
       }}
-      className="w-full"
     >
       <SelectTrigger>
         <SelectValue placeholder="Select a Brand" />

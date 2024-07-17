@@ -12,6 +12,7 @@ import {
 import ContentCardDropDown from "./ConentCardDropDown";
 import Link from "next/link";
 import { getTimeElapsedString } from "@/lib/utils";
+import Image from "next/image";
 
 function ContentCard({
   content,
@@ -22,7 +23,7 @@ function ContentCard({
     <Link href={`/dashboard/${content.brandId}/content-edit/${content.id}`}>
       <Card className="w-[350px] rounded-lg overflow-hidden border-none shadow-none hover:border hover:shadow-lg dark:hover:bg-slate-900 transition duration-300">
         <div className="relative">
-          <img
+          <Image
             alt={content.title}
             className="w-full h-48 object-cover rounded-lg"
             width="350"

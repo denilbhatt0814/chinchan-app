@@ -31,6 +31,7 @@ import {
 } from "next-cloudinary";
 import Player from "next-video/player";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
+import Image from "next/image";
 
 function EditContentForm({ content }: { content: SelectVideo }) {
   const router = useRouter();
@@ -98,7 +99,7 @@ function EditContentForm({ content }: { content: SelectVideo }) {
       <div className="flex flex-col gap-1">
         <h1 className="text-2xl font-semibold">Edit Content</h1>
         <p className="text-muted-foreground">
-          👀 Hmmm, Seems we're modifying something!
+          👀 Hmmm, Seems we&apos;re modifying something!
         </p>
       </div>
 
@@ -113,13 +114,12 @@ function EditContentForm({ content }: { content: SelectVideo }) {
                   <CldUploadButton
                     uploadPreset="chinchanuploads"
                     onUpload={handleVideoUpload}
-                    children={
-                      <div className="flex items-center p-0 gap-1 rounded-md hover:bg-slate-50 dark:hover:bg-slate-800 hover:shadow-sm">
-                        <p className="text-sm">Change</p>
-                        <UploadIcon className="w-4 h-4" />
-                      </div>
-                    }
-                  />
+                  >
+                    <div className="flex items-center p-0 gap-1 rounded-md hover:bg-slate-50 dark:hover:bg-slate-800 hover:shadow-sm">
+                      <p className="text-sm">Change</p>
+                      <UploadIcon className="w-4 h-4" />
+                    </div>
+                  </CldUploadButton>
                 )}
               </FormLabel>
               <FormControl>
@@ -161,13 +161,12 @@ function EditContentForm({ content }: { content: SelectVideo }) {
                   <CldUploadButton
                     uploadPreset="chinchanuploads"
                     onUpload={handleThumbnailUpload}
-                    children={
-                      <div className="flex items-center p-0 gap-1 rounded-md hover:bg-slate-50 dark:hover:bg-slate-800 hover:shadow-sm">
-                        <p className="text-sm">Change</p>
-                        <UploadIcon className="w-4 h-4" />
-                      </div>
-                    }
-                  />
+                  >
+                    <div className="flex items-center p-0 gap-1 rounded-md hover:bg-slate-50 dark:hover:bg-slate-800 hover:shadow-sm">
+                      <p className="text-sm">Change</p>
+                      <UploadIcon className="w-4 h-4" />
+                    </div>
+                  </CldUploadButton>
                 )}
               </FormLabel>
               <FormControl>
@@ -193,8 +192,9 @@ function EditContentForm({ content }: { content: SelectVideo }) {
                     form.getValues().thumbnailUrl) && (
                     <div className="col-span-2 h-[20vh]">
                       <AspectRatio ratio={16 / 9}>
-                        <img
+                        <Image
                           src={form.getValues().thumbnailUrl}
+                          alt="Thumbnail Image"
                           className="h-full w-full object-cover"
                         />
                       </AspectRatio>

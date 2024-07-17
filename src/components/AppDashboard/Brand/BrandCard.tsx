@@ -5,6 +5,7 @@ import React from "react";
 import { Card } from "@/components/ui/card";
 import Link from "next/link";
 import { ExternalLinkIcon } from "lucide-react";
+import Image from "next/image";
 
 function BrandCard({
   brand,
@@ -19,7 +20,7 @@ function BrandCard({
       }}
     >
       <Card className="relative md:h-[20vh] md:w-[20vw] border bottom-2 overflow-hidden shadow-md hover:shadow-lg rounded-md">
-        <img
+        <Image
           src={brand.bannerUrl!}
           width={1920}
           height={1080}
@@ -28,7 +29,7 @@ function BrandCard({
         />
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="flex flex-col items-center gap-4">
-            <img
+            <Image
               src={brand.logoUrl!}
               width={64}
               height={64}
